@@ -205,7 +205,7 @@ void menu(NodePtr* top)
  * @return char array representing name of the town
  */
 char* townMapping(int x){
-    //TODO 11 implement townMapping function
+    //TODO 10 implement townMapping function
 }// ends townMapping function
 /**
  *
@@ -214,7 +214,7 @@ char* townMapping(int x){
  */
 char* raceMapping(int x)
 {
-    //TODO 12 implement raceMapping function
+    //TODO 11 implement raceMapping function
 
 }// ends raceMapping function
 
@@ -228,7 +228,7 @@ char* raceMapping(int x)
  * @return
  */
 char* townMappingRegionBased(int region, int x){
-    //TODO 10 implement townMappingRegionBased function. Hint! Take lead from regionMapping function
+    //TODO 12 implement townMappingRegionBased function. Hint! Take lead from regionMapping function
 
 
 }// ends townMappingRegionBased function
