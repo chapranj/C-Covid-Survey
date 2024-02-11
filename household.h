@@ -15,8 +15,10 @@
 #define ARR_REGION_LEN 3 // maximum number of regions i.e. size of regionsArr
 #define ARR_RACE_LEN 5  // maximum number of races i.e. size of racesArr
 #define REGION_NAME_LEN 10 // maximum number of characters in the name of a region
-#define TOWN_NAME_LEN 15   // maximum number of characters in the name of a town
-#define RACE_NAME_LEN 20   // maximum number of characters in the name of a race
+#define TOWN_NAME_LEN 12   // maximum number of characters in the name of a town
+#define RACE_NAME_LEN 15   // maximum number of characters in the name of a race
+#define FORMAT_HEADER "%5s %10s %12s %18s %15s %10s %12s\n"      //format specifier for the header
+#define FORMAT_DATA   "%5d %10d %12d %18d %15s %10s %12s\n"     //format specifier for a record
 static char racesArr[ARR_RACE_LEN][RACE_NAME_LEN] = {"CAUCASIAN", "INDIGENOUS", "AFRO-AMERICAN", "ASIAN", "OTHER"};
 static char regionsArr[ARR_REGION_LEN][REGION_NAME_LEN] = {"DURHAM", "PEEL", "YORK"};
 static char townsArr[ARR_TOWN_LEN][TOWN_NAME_LEN] = {"OSHAWA", "WHITBY", "BRAMPTON", "MISSISSAUGA", "MAPLE", "VAUGHAN"};
@@ -30,7 +32,7 @@ typedef struct household {
     }Household;
 typedef struct pair_ {
     int count;
-    char town[20];
+    char town[TOWN_NAME_LEN];
 }LocationCountPair;
 
 typedef struct temp_ {

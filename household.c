@@ -33,12 +33,16 @@ void sortSelection(LocationCountPair arr[], int arrSize){
     }
 }
 /**
- * This is a generic validation function that takes the upper bound of valid options up to 8 and returns 9 if the user
- * opts to go back to the previous menu instead of providing valid data. Therefore 9 should not be a valid choice!!
- * @param upperbound
- * @return
+ * This is a generic validation function that takes the upper bound of valid options up to upperbound and returns exitOption
+ * if the user opts to go back to the previous menu instead of providing valid data. Therefore exitOption should not be a
+ * valid choice!!
  */
-
+ /**
+  *
+  * @param upperbound is the largest integer value that is a valid choice
+  * @param exitOption is the value user enters to exit the menu
+  * @return
+  */
 int dataValidation(int upperbound, int exitOption) {
         int n = 0, num;
         char temp[40];
@@ -61,26 +65,11 @@ int dataValidation(int upperbound, int exitOption) {
 /**
  *
  * @param x Takes an integer representing a region
- * @return and returns the corresponding region's name
+ * @return is the corresponding region's name
  */
 char* regionMapping(int x)
 {
-    char* str;
-    switch(x)
-    {
-        case 0:
-            str = "Durham";
-            break;
-        case 1:
-            str = "Peel";
-            break;
-        case 2:
-            str = "York";
-            break;
-        default:
-            str = "York";
-    }
-    return str;
+   return regionsArr[x];
 }// ends regionMapping function
 /**
  * Full implementation of the menu function is provided that implements entire main user interface of the application.
@@ -211,43 +200,12 @@ void menu(NodePtr* top)
 
 }// menus function ends
 /**
- * This function takes region integer and town integer, town integer actually represents its town number within that region
- * So if there are three towns in a region, town number 0 corresponds to the first town in that region.
- * Read the header file and carefully go through the ordering of elements of regionArr and townArr. regionArr's elements
- * are in alphabetical order, but try to figure out what is the order of townArr elements.
- * @param region an integer value representing a region
- * @param x representing index value from townsArr array (refer to the header file)
- * @return
- */
-char* townMappingRegionBased(int region, int x){
-    //TODO 10 implement townMappingRegionBased function
-
-
-}// ends townMappingRegionBased function
-/**
  * This is a simple mapping function, just like regionMapping function
  * @param x is an integer corresponding to the townArr index
  * @return char array representing name of the town
  */
 char* townMapping(int x){
     //TODO 11 implement townMapping function
-    char* str;
-    switch(x)
-    {
-        case 0:
-            str = "Durham";
-            break;
-        case 1:
-            str = "Peel";
-            break;
-        case 2:
-            str = "York";
-            break;
-        default:
-            str = "York";
-    }
-    return str;
-
 }// ends townMapping function
 /**
  *
@@ -259,6 +217,21 @@ char* raceMapping(int x)
     //TODO 12 implement raceMapping function
 
 }// ends raceMapping function
+
+/**
+ * This function takes region integer and town integer, town integer actually represents its town number within that region
+ * So if there are three towns in a region, town number 0 corresponds to the first town in that region.
+ * Read the header file and carefully go through the ordering of elements of regionArr and townArr. regionArr's elements
+ * are in alphabetical order, but try to figure out what is the order of townArr elements.
+ * @param region an integer value representing a region
+ * @param x representing index value from townsArr array (refer to the header file)
+ * @return
+ */
+char* townMappingRegionBased(int region, int x){
+    //TODO 10 implement townMappingRegionBased function. Hint! Take lead from regionMapping function
+
+
+}// ends townMappingRegionBased function
 /**
  * It populates the linked list with valid random data. The top of the list is passed as a reference i.e. address of the pointer!
  * @param top top is passed by reference i.e. address of the pointer top is passed in the call!
@@ -273,7 +246,7 @@ void initializeData(NodePtr* top) {
  * @param region is the region that all the displayed records should belong to
  */
 void displayRecordsOfOneRegion(NodePtr top, char region[]) {
-    // TODO 02: implement displayRecordsOfOneRegion function
+    // TODO 02: implement displayRecordsOfOneRegion function.
 
 } //ends displayRecordsOfOneRegion
 /**
@@ -336,6 +309,7 @@ void deleteNodesGivenCriteria(NodePtr* top, char region[], char town[], char rac
  */
 void printList(NodePtr ptr) {
     // TODO 09: implement printList function
+    //Hint! Use FORMAT_HEADER format specifier string constant declared in the header file
 
     //function printRecord is invoked
 
@@ -347,6 +321,7 @@ void printList(NodePtr ptr) {
  */
 void printRecord(int ctr, NodePtr ptr){
     // TODO 13: implement printRecord function
+    // Hint! use FORMAT_DATA format specifier string constant declared in the header file
 
 }
 /**
@@ -439,5 +414,5 @@ void displayRecordsFromFile() {
     strcat(filename, fileNames[fileNum]);
     filename[strcspn(filename, "\n")] = '\0'; // this replaces the next-line character in the name of the file by string termination character
     FILE *cfPtr = fopen( filename, "r" );
-    // TODO 20: implement displayRecordsFromFile function by adding code to read data from the file selected above
+    // TODO 20: finish displayRecordsFromFile function by adding code to read data from the file selected above
 }
