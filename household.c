@@ -102,9 +102,9 @@ void menu(NodePtr* top)
         scanf("%d", &optionTopLevel);
         int c;
         while ((c = getchar()) != '\n' && c != EOF) { } // input stream flushing
-
         if (optionTopLevel == 0)
         {
+            printList(*top);
             printf("\nThank you");
             return;
         }
@@ -206,16 +206,16 @@ void menu(NodePtr* top)
  */
 char* townMapping(int x){
     //TODO 10 implement townMapping function
+    return townsArr[x];
 }// ends townMapping function
 /**
  *
  * @param x
  * @return
  */
-char* raceMapping(int x)
-{
+char* raceMapping(int x){
     //TODO 11 implement raceMapping function
-
+    return racesArr[x];
 }// ends raceMapping function
 
 /**
@@ -229,16 +229,53 @@ char* raceMapping(int x)
  */
 char* townMappingRegionBased(int region, int x){
     //TODO 12 implement townMappingRegionBased function. Hint! Take lead from regionMapping function
-
-
+    switch (region) {
+        case 0:
+            return townsArr[x];
+        case 1:
+            return townsArr[x+2];
+        case 2:
+            return townsArr[x+4];
+        default:
+            break;
+    }
+    return 0;
 }// ends townMappingRegionBased function
 /**
  * It populates the linked list with valid random data. The top of the list is passed as a reference i.e. address of the pointer!
  * @param top top is passed by reference i.e. address of the pointer top is passed in the call!
  */
 void initializeData(NodePtr* top) {
+
     // This function populates the linked list with random data.
     // TODO 01: Implement initializeData function.
+
+    *top =  malloc(sizeof (**top));
+    (*top)->next = NULL;
+
+    strcpy((*top)->data.race, racesArr[rand()%5]);
+    int randomRegionSelected = rand()%3;
+    strcpy((*top)->data.region, regionsArr[randomRegionSelected]);
+    int townBaseRandomForm = rand()%2;
+    strcpy((*top)->data.town, townMappingRegionBased(randomRegionSelected,townBaseRandomForm));
+    int randFamilySize = (rand()%MAX_FAMILYSIZE)+1;
+    (*top)->data.familySize = randFamilySize;
+    (*top)->data.fullyVaccinated = (rand() % randFamilySize + 1);
+    (*top)->data.testedPositive = (rand() % randFamilySize + 1);
+
+    for (int i = 0; i < SIZE-1; ++i) {
+        Household houseHold;
+        strcpy(houseHold.race, racesArr[rand() % 5]);
+        int randomRegionSelected = rand() % 3;
+        strcpy(houseHold.region, regionsArr[randomRegionSelected]);
+        int townBaseRandomForm = rand() % 2;
+        strcpy(houseHold.town, townMappingRegionBased(randomRegionSelected,townBaseRandomForm));
+        int randFamilySize = (rand()%MAX_FAMILYSIZE)+1;
+        houseHold.familySize = randFamilySize;
+        houseHold.fullyVaccinated =(rand() % randFamilySize+1);
+        houseHold.testedPositive = (rand() % randFamilySize+1);
+        addNode(top, houseHold);
+    }
 } //initializeData ends
 /**
  *
@@ -247,7 +284,16 @@ void initializeData(NodePtr* top) {
  */
 void displayRecordsOfOneRegion(NodePtr top, char region[]) {
     // TODO 02: implement displayRecordsOfOneRegion function.
-
+    int snoCounter = 1;
+    printf(FORMAT_HEADER, "S.No", "Size", "Vaccinated", "Positive", "Race", "Region", "Town");
+    while(top!=NULL){
+        if (!strcmp(top->data.region, region)) {
+            printf(FORMAT_DATA, snoCounter++, top->data.familySize, top->data.fullyVaccinated, top->data.testedPositive,
+                   top->data.race, top->data.region, top->data.town);
+        }
+        top = top->next;
+    }
+    puts("");
 } //ends displayRecordsOfOneRegion
 /**
  *
@@ -256,7 +302,16 @@ void displayRecordsOfOneRegion(NodePtr top, char region[]) {
  */
 void displayRecordsOfOneTown(NodePtr top, char town[]) {
     // TODO 03: implement displayRecordsOfOneTown function
-
+    int snoCounter = 1;
+    printf(FORMAT_HEADER, "S.No", "Size", "Vaccinated", "Positive", "Race", "Region", "Town");
+    while(top!=NULL){
+        if (!strcmp(top->data.town, town)) {
+            printf(FORMAT_DATA, snoCounter++, top->data.familySize, top->data.fullyVaccinated, top->data.testedPositive,
+                   top->data.race, top->data.region, top->data.town);
+        }
+        top = top->next;
+    }
+    puts("");
 } //ends displayRecordsOfOneTown
 /**
  *
@@ -265,7 +320,16 @@ void displayRecordsOfOneTown(NodePtr top, char town[]) {
  */
 void displayRecordsOfOneRace(NodePtr top, char race[]) {
     // TODO 04: implement displayRecordsOfOneRace function
-
+    int snoCounter = 1;
+    printf(FORMAT_HEADER, "S.No", "Size", "Vaccinated", "Positive", "Race", "Region", "Town");
+    while(top!=NULL){
+        if (!strcmp(top->data.race, race)) {
+            printf(FORMAT_DATA, snoCounter++, top->data.familySize, top->data.fullyVaccinated, top->data.testedPositive,
+                   top->data.race, top->data.region, top->data.town);
+        }
+        top = top->next;
+    }
+    puts("");
 } //ends displayRecordsOfOneTown
 /**
  *
@@ -275,7 +339,15 @@ void displayRecordsOfOneRace(NodePtr top, char race[]) {
  */
 void displayRecordsOfRegionWithPositiveCases(NodePtr top, char region[], int numOfPositiveCases){
     // TODO 05: implement displayRecordsOfRegionWithPositiveCases function
-
+    printf(FORMAT_HEADER, "S.No", "Size", "Vaccinated", "Positive", "Race", "Region", "Town");
+    int ctr = 1;
+    while(top!=NULL){
+        if((top->data.testedPositive >= numOfPositiveCases) && (!strcmp(top->data.region, region))){
+            printRecord(ctr++, top);
+        }
+        top=top->next;
+    }
+    puts("");
 }
 /**
  * This function ranks all the towns in descending order of total number of people vaccinated
@@ -283,8 +355,46 @@ void displayRecordsOfRegionWithPositiveCases(NodePtr top, char region[], int num
  */
 void regionsTownWiseRankingVaccinated(NodePtr top){
     // TODO 06: implement regionsTownWiseRankingVaccinated function
+    LocationCountPair lC[6];
+    LocationCountPair lCRegion[6];
+    for (int i = 0; i < ARR_TOWN_LEN; ++i) {
+        strcpy(lC[i].town, townsArr[i]);
+        lC[i].count = 0;
+    }
+    for (int i = 0; i < ARR_REGION_LEN; ++i) {
+        strcpy(lCRegion[i].town, regionsArr[i]);
+        lCRegion[i].count = 0;
+    }
 
+    while(top!=NULL){
+        for (int i = 0; i < ARR_TOWN_LEN; ++i) {
+            if ((!strcmp(top->data.town, lC[i].town))){
+                lC[i].count+=top->data.fullyVaccinated;
+                break;
+            }
+        }
+        for (int i = 0; i < ARR_REGION_LEN; ++i) {
+            if ((!strcmp(top->data.region, lCRegion[i].town))){ //.town for lCRegion is basically .region here
+                lCRegion[i].count+=top->data.fullyVaccinated;
+                break;
+            }
+        }
+        top = top->next;
+    }
+
+    sortSelection(lC, ARR_TOWN_LEN);
+    sortSelection(lCRegion, ARR_REGION_LEN);
+
+    puts("Total Vaccinated: \nRegion-wise ranking:\n");
+    for (int i = 0; i < ARR_REGION_LEN; ++i) {
+        printf("\t\t%s : %d\n", lCRegion[i].town, lCRegion[i].count);
+    }
+    puts("Town-wise ranking:\n");
+    for (int i = 0; i < ARR_TOWN_LEN; ++i) {
+        printf("\t\t%s : %d\n", lC[i].town, lC[i].count);
+    }
 } // function regionsTownWiseRankingVaccinated ends
+
 /**
  * This function gets validated data from the user for adding a record and then invokes makeHousehold function as part
  * of the return statement
@@ -292,7 +402,57 @@ void regionsTownWiseRankingVaccinated(NodePtr top){
  */
 Household userInteractionForRecordAddition(){
     // TODO 07: implement userInteractionForRecordAddition function
+    char temp[25];
+    int regionOption, townOption, raceOption, totalPeople, fullyVac, covPos;
+    while(1) {
+        puts("Enter region: 0 for Durham, 1 for Peel, 2 for York");
+        fgets(temp, sizeof(temp), stdin);
+        int n = sscanf(temp, "%d", &regionOption);
+        if (n != 1 || regionOption > 2 || regionOption < 0) {
+            puts("Please enter valid option. Try again!");
+            continue;
+        }
+        break;
+    }
+    while(1) {
+        printf("Enter town : 0 for %s, 1 for %s:\n", townMappingRegionBased(regionOption, 0), townMappingRegionBased
+                (regionOption, 1));
+        fgets(temp, sizeof(temp), stdin);
+        int n = sscanf(temp, "%d", &townOption);
+        if (n != 1 || townOption > 1 || townOption < 0) {
+            puts("Please enter valid option. Try again!");
+            continue;
+        }
+        break;
+    }
+    while(1) {
+        puts("Enter race");
+        puts("Enter 0 for Caucasian, 1 for indigenous, 2 for African_American, 3 for Asian, 4 for Other");
+        fgets(temp, sizeof(temp), stdin);
+        int n = sscanf(temp, "%d", &raceOption);
+        if (n != 1 || raceOption > 4 || raceOption < 0) {
+            puts("Please enter valid option. Try again!");
+            continue;
+        }
+        break;
+    }
+    puts("Please enter\n1-total people in the household,\n2-people fully vaccinated,\n3-people tested Covid "
+         "positive\n separated by space/tab and make sure all of these are valid integers\n");
+    while(1){
+        fgets(temp, sizeof (temp), stdin);
+        int n = sscanf(temp, "%d%d%d", &totalPeople, &fullyVac, &covPos);
+        if((n!=3) || ((totalPeople<covPos)||(totalPeople <fullyVac))){
+            puts("Total people in the household can't be less than total vaccinated or total Covid positive cases. "
+                 "Please re-enter values:");
+            continue;
+        }
+        break;
+    }
+    return makeHousehold(raceMapping(raceOption), regionMapping(regionOption), townMappingRegionBased(regionOption,
+                                                                                                townOption),
+                  totalPeople, covPos, fullyVac);
 }
+
 /**
  *
  * @param top top of the list to be passed by reference
@@ -301,28 +461,69 @@ Household userInteractionForRecordAddition(){
  * @param race passed as a character array
  */
 void deleteNodesGivenCriteria(NodePtr* top, char region[], char town[], char race[]) {
+
     //TODO 08: implement deleteNodesGivenCriteria function
+    int counter = 0;
+    while((*top)!=NULL &&
+    (strcmp((*top)->data.region, region)==0 &&
+    (strcmp((*top)->data.race, race)==0 &&
+    (strcmp((*top)->data.town, town)==0)))){
+        NodePtr temp = *top;
+        *top = (*top)->next;
+        free(temp);
+        counter++;
+    }
+
+    NodePtr curr = *top;
+    NodePtr prev = curr;
+
+    while(curr!=NULL){
+        while(curr!=NULL &&
+        ((strcmp((curr)->data.region,region)!=0) ||
+        (strcmp((curr)->data.town, town)!=0 ||
+        (strcmp((curr)->data.race,race)!=0)))){
+            prev = curr;
+            curr = curr->next;
+        }
+
+        if(curr==NULL){
+            break;
+        }
+        prev->next = curr->next;
+        free(curr);
+        counter++;
+        curr=prev->next;
+    }
+
+    printf("%d matching records deleted..\n", counter);
+
 }// deleteNodeCriteria function ends
 /**
  * This function prints the entire list of data. It invokes printRecord function
  * @param ptr is the top of the list
- */
+*/
 void printList(NodePtr ptr) {
     // TODO 09: implement printList function
     //Hint! Use FORMAT_HEADER format specifier string constant declared in the header file
-
+    int snoCounter = 1;
+    printf(FORMAT_HEADER, "S.No", "Size", "Vaccinated", "Positive", "Race", "Region", "Town");
+    while(ptr!=NULL){
+        printRecord(snoCounter++, ptr);
+        ptr = ptr->next;
+    }
+    puts("");
     //function printRecord is invoked
-
 }
 /**
  * It prints a single record starting with a serial number to keep a count of number of records printed
  * @param ctr serial number of the record
  * @param ptr top of the list
  */
-void printRecord(int ctr, NodePtr ptr){
+void printRecord(int ctr, NodePtr ptr) {
     // TODO 13: implement printRecord function
     // Hint! use FORMAT_DATA format specifier string constant declared in the header file
-
+    printf(FORMAT_DATA, ctr, ptr->data.familySize, ptr->data.fullyVaccinated, ptr->data.testedPositive, ptr->data
+            .race, ptr->data.region, ptr->data.town);
 }
 /**
  * This function takes data items of a Household record and sets members of a locally declared Household instance and returns it
@@ -336,8 +537,17 @@ void printRecord(int ctr, NodePtr ptr){
  */
 Household makeHousehold(char race[], char region[], char town[], int familySize, int totPosCovid, int fullyVac ){
     // TODO 14: implement makeHousehold function
+    Household newHouse;
+    strcpy(newHouse.race, race);
+    strcpy(newHouse.region, region);
+    strcpy(newHouse.town, town);
+    newHouse.familySize = familySize;
+    newHouse.testedPositive = totPosCovid;
+    newHouse.fullyVaccinated = fullyVac;
+    return newHouse;
 
 }
+
 /**
  * makeNode function allocates dynamic memory to create a node, populates with the data based on its argument of type Household
  * and returns the populated node
@@ -346,8 +556,12 @@ Household makeHousehold(char race[], char region[], char town[], int familySize,
  */
 NodePtr makeNode(Household num){
     // TODO 15: implement makeNode function
-
+    Node* n = malloc(sizeof (Node));
+    n->data = num;
+    n->next = NULL;
+    return n;
 }
+
 /**
  * Add node takes a Household instance, creates a node from it and then adds it to the front of the list that it takes as
  * its other argument
@@ -356,6 +570,10 @@ NodePtr makeNode(Household num){
  */
 void addNode(NodePtr* top, Household num){
     // TODO 16: implement addNode function
+    Node* newNode = makeNode(num);
+    newNode->data = num;
+    newNode->next = *top;
+    (*top) = newNode;
 }
 /**
  * THis function deletes a node from the list
@@ -363,6 +581,9 @@ void addNode(NodePtr* top, Household num){
  */
 void deleteNode(NodePtr* tom){
     // TODO 17: implement deleteNode function
+    NodePtr temp = *tom;
+    *tom = (*tom)->next;
+    free(temp);
 }
 /**
  * This function deletes all nodes (records) of the list
@@ -370,6 +591,9 @@ void deleteNode(NodePtr* tom){
  */
 void deleteAllNodes(NodePtr* tom){
     // TODO 18: implement deleteAllNodes function
+    while(*tom!=NULL){
+        deleteNode(tom);
+    }
 }
 /**
  * It write all the records to a file. As a sample, clients.txt file is saved in the data folder as part of the project folder
@@ -378,7 +602,24 @@ void deleteAllNodes(NodePtr* tom){
  */
 void writeListToFile(NodePtr top, char fileName[]){
     // TODO 19: implement writeListToFile function
+    FILE *cfPtr;
+    if ((cfPtr = fopen(fileName, "w")) == NULL){
+        printf("File could not be opened\n");
+    }
+    else{
+        while(top!=NULL){
+            fprintf(cfPtr ,"%s %s %s %d %d %d\n",  top->data.race, top->data.region, top->data.town, top->data
+            .familySize, top->data.fullyVaccinated, top->data.testedPositive);
+            top=top->next;
+        }
+        fprintf(cfPtr, "%s %s %s %d %d %d", "Last", "Record", "None", 0,0,0 );
+        fclose(cfPtr);
+    }
+    printf("%d records written successfully as the text file: %s\n", SIZE, fileName);
+    displayRecordsFromFile();
 }
+
+
 void displayRecordsFromFile() {
     DIR *d;
     struct dirent *dir;
@@ -390,6 +631,7 @@ void displayRecordsFromFile() {
     char fileNames[fileCtr][80];
     int fileCount = 0;
     d = opendir(path);
+
     if (d)
     {
         while ((dir = readdir(d)) != NULL)
@@ -401,7 +643,6 @@ void displayRecordsFromFile() {
                 strcpy(fileNames[fileCount], full_path);
                 printf("(%d) %s\n",fileCount++, full_path); // displaying the contents of Data folder
             }
-
         }
     }
     closedir(d);
@@ -414,5 +655,32 @@ void displayRecordsFromFile() {
     strcat(filename, fileNames[fileNum]);
     filename[strcspn(filename, "\n")] = '\0'; // this replaces the next-line character in the name of the file by string termination character
     FILE *cfPtr = fopen( filename, "r" );
+
+    char race[RACE_NAME_LEN];
+    char region[REGION_NAME_LEN];
+    char town[TOWN_NAME_LEN];
+    int familySize;
+    int fullyVaccinated;
+    int testedPositive;
+    int ctr = 1;
+//    Household h;
+    if (fopen(filename, "r") == NULL) {
+        printf("File could not be opened!\n");
+        exit(1);
+    }
+    else{
+        while(!feof(cfPtr)){
+            Household h;
+            fscanf(cfPtr,  "%s %s %s %d %d %d", race, region, town, &familySize, &fullyVaccinated, &testedPositive );
+            if(!strcmp(race, "Last")){
+                break;
+            }
+            Household houseRead = makeHousehold(race, region, town, familySize, fullyVaccinated, testedPositive);
+            NodePtr houseReadPtr = makeNode(houseRead);
+            printRecord(ctr++, houseReadPtr );
+            free(houseReadPtr);
+        }
+        fclose(cfPtr);
+    }
     // TODO 20: finish displayRecordsFromFile function by adding code to read data from the file selected above
 }

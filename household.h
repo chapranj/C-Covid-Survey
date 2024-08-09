@@ -1,7 +1,7 @@
 /**
- * Student Name:
- * Student ID:
- * Date modified:
+ * Student Name: Pranjal Chauhan
+ * Student ID: 991705179
+ * Date modified: 2024-07-18
  * Above data must be filled and NO OTHER CHANGE MUST BE MADE in this file!!
  * household.h built by M. Mohiuddin to be shared with students as part of the documentation and starting application
  * for assignment's solution.
@@ -18,10 +18,11 @@
 #define TOWN_NAME_LEN 12   // maximum number of characters in the name of a town
 #define RACE_NAME_LEN 15   // maximum number of characters in the name of a race
 #define FORMAT_HEADER "%5s %10s %12s %18s %15s %10s %12s\n"      //format specifier for the header
-#define FORMAT_DATA   "%5d %10d %12d %18d %15s %10s %12s\n"     //format specifier for a record
+#define FORMAT_DATA   "%5d %10d %12d %18d %15s %10s %12s\n"      //format specifier for a record
 static char racesArr[ARR_RACE_LEN][RACE_NAME_LEN] = {"CAUCASIAN", "INDIGENOUS", "AFRO-AMERICAN", "ASIAN", "OTHER"};
 static char regionsArr[ARR_REGION_LEN][REGION_NAME_LEN] = {"DURHAM", "PEEL", "YORK"};
 static char townsArr[ARR_TOWN_LEN][TOWN_NAME_LEN] = {"OSHAWA", "WHITBY", "BRAMPTON", "MISSISSAUGA", "MAPLE", "VAUGHAN"};
+
 typedef struct household {
     char race[RACE_NAME_LEN];
     char region[REGION_NAME_LEN];
@@ -29,7 +30,8 @@ typedef struct household {
     int familySize;
     int fullyVaccinated;
     int testedPositive;
-    }Household;
+}Household;
+
 typedef struct pair_ {
     int count;
     char town[TOWN_NAME_LEN];
@@ -39,6 +41,7 @@ typedef struct temp_ {
     Household data;
     struct temp_ * next;
 }Node, *NodePtr;
+
 // Menu functions listed under item A (refer to problem specifications)
 void displayRecordsOfOneRegion(NodePtr top, char region[]);
 void displayRecordsOfOneTown(NodePtr top, char town[]);
